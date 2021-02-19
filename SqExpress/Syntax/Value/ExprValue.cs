@@ -5,10 +5,8 @@ using SqExpress.Syntax.Select;
 
 namespace SqExpress.Syntax.Value
 {
-    public abstract class ExprValue : IExprSelecting, IExprAssigning
+    public abstract class ExprValue : ExprSelecting, IExprAssigning
     {
-        public abstract TRes Accept<TRes, TArg>(IExprVisitor<TRes, TArg> visitor, TArg arg);
-
         public bool Equals(ExprValue? other) 
             => base.Equals(other);
 
@@ -120,8 +118,8 @@ namespace SqExpress.Syntax.Value
 
         //Subtraction
 
-        public static ExprSum operator -(ExprValue a, ExprValue b)
-            => new ExprSum(a, b);
+        public static ExprSub operator -(ExprValue a, ExprValue b)
+            => new ExprSub(a, b);
 
         //Int
         public static ExprSub operator -(ExprValue a, int b)
@@ -210,6 +208,24 @@ namespace SqExpress.Syntax.Value
 
         public static ExprDiv operator /(double? a, ExprValue b)
             => new ExprDiv(SqQueryBuilder.Literal(a), b);
+
+        //Remainder
+
+        public static ExprModulo operator %(ExprValue a, ExprValue b)
+            => new ExprModulo(a, b);
+
+        //Int
+        public static ExprModulo operator %(ExprValue a, int b)
+            => new ExprModulo(a, SqQueryBuilder.Literal(b));
+
+        public static ExprModulo operator %(int a, ExprValue b)
+            => new ExprModulo(SqQueryBuilder.Literal(a), b);
+
+        public static ExprModulo operator %(ExprValue a, int? b)
+            => new ExprModulo(a, SqQueryBuilder.Literal(b));
+
+        public static ExprModulo operator %(int? a, ExprValue b)
+            => new ExprModulo(SqQueryBuilder.Literal(a), b);
 
         //Boolean
 

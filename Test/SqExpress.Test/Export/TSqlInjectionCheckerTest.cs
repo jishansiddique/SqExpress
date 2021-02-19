@@ -40,9 +40,20 @@ namespace SqExpress.Test.Export
 
         private static string AppendStringEscape(string original)
         {
-            StringBuilder builder = new StringBuilder();
-            SqlInjectionChecker.AppendStringEscapeSingleQuote(builder, original);
-            return builder.ToString();
+            var sql = SqQueryBuilder.Literal(original).ToSql();
+            return sql.Substring(1, sql.Length-2);
+        }
+
+        [Test]
+        public void Test()
+        {
+            Assert.AreEqual("''\\\\''", AppendStringEscapeMySql("'\\'"));
+        }
+
+        private static string AppendStringEscapeMySql(string original)
+        {
+            var sql = SqQueryBuilder.Literal(original).ToMySql();
+            return sql.Substring(1, sql.Length - 2);
         }
     }
 }
